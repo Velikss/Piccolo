@@ -1,0 +1,7 @@
+{
+  "token": "TOKEN",
+  "host" : "SQL-host",
+  "user" : "SQL user",
+  "password" : "SQL password",
+  "database" : "SQL database"
+}
