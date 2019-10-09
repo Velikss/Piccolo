@@ -1,11 +1,14 @@
 const mysql = require('mysql');
 const date = require("date-and-time");
+const fs = require("fs");
+const request = require("request");
 
 exports.run = (client, message, args) => {
-  client.logger.log(`Saving url for ${message.author.tag}...`, "cmd");
+  client.logger.log(`Saving mp3 for ${message.author.tag}...`, "cmd");
   const con = client.con;
-  const url = args[0];
+  const url = message.attachments.first().url;
   const userID = message.author.id;
+  const path = client.config.downloadPath + message.author.id + '-' +  message.attachments.first().filename;
 
   //Check if user already exists
   var sql = 'SELECT * FROM greetings WHERE userID = ' + mysql.escape(userID);
@@ -18,16 +21,27 @@ exports.run = (client, message, args) => {
       if(result[0].type == 'mp3')
         fs.unlinkSync(result[0].path)
 
+      //Download new file
+      client.logger.log(`Downloading file... ${url}`)
+      request.get(url)
+        .on('error', console.error)
+        .pipe(fs.createWriteStream(path));
+
       //Update database
-      var sql = `UPDATE greetings SET path = ${mysql.escape(url)}, date = '${date.format(new Date(), "ddd MM DD | hh:mm:ss A")}' WHERE userID = ${mysql.escape(userID)}`;
+      var sql = `UPDATE greetings SET path = '${path}', type = 'mp3', date = '${date.format(new Date(), "ddd MM DD | hh:mm:ss A")}' WHERE userID = ${mysql.escape(userID)}`;
       con.query(sql, function (err, result) {
         if (err) throw err;
         client.logger.log(`${result.affectedRows} records(s) updated for user ${message.author.tag}`, "succes");
       })
       //If user does not exist
     } else {
+      //Download file
+      request.get(url)
+        .on('error', console.error)
+        .pipe(fs.createWriteStream(path));
+
       //Save data to database
-      var sql = `INSERT INTO greetings (userID, path, type, date) VALUES (${mysql.escape(userID)}, ${mysql.escape(url)}, 'url', '${date.format(new Date(), "ddd MM DD | hh:mm:ss A")}')`;
+      var sql = `INSERT INTO greetings (userID, path, type, date) VALUES (${mysql.escape(userID)}, '${path}', 'mp3', '${date.format(new Date(), "ddd MM DD | hh:mm:ss A")}')`;
       con.query(sql, function (err, result) {
         if (err) throw err;
         client.logger.log(`1 record inserted for new user ${message.author.tag}`, "succes");
@@ -36,7 +50,7 @@ exports.run = (client, message, args) => {
   });
 
   //Let user know we're done
-  message.reply(`Database has been updated!✅`)
+  message.reply(`File has been downloaded and the database has been updated!✅`)
 };
 
 exports.conf = {
@@ -44,8 +58,8 @@ exports.conf = {
 };
 
 exports.help = {
-  name: "url",
+  name: "mp3",
   category: "",
   description: "",
-  usage: "<url>"
+  usage: "<file>"
 };
