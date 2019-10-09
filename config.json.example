@@ -1,5 +1,6 @@
 {
   "token": "TOKEN",
+  "downloadPath" : "/path/to/store/downloads/",
   "host" : "SQL-host",
   "user" : "SQL user",
   "password" : "SQL password",
