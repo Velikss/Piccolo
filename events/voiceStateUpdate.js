@@ -2,7 +2,6 @@ const mysql = require('mysql');
 const ytdl = require('ytdl-core');
 
 exports.run = (client, oldMember, newMember) => {
-  client.logger.log('Event fired!');
   const con = client.con;
   const guildID = newMember.guild.id;
 

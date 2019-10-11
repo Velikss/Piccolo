@@ -12,7 +12,7 @@ exports.run = (client, message, args) => {
   //Inserting channel to databa
   const channelID = args[0];
   if(!message.guild.channels.has(channelID)) return (message.reply(`The channel you supplied is invalid!`));
-  client.logger.log(`Saving channel for guild: ${message.guild.name}...`);
+  client.logger.log(`Saving voicechannel ${client.channels.get(channelID).name} for guild: ${message.guild.name}...`);
 
   var sql = `UPDATE guilds SET channel = ${mysql.escape(channelID)} WHERE id = ${mysql.escape(message.guild.id)}`;
   con.query(sql, function (err, result) {
@@ -21,9 +21,10 @@ exports.run = (client, message, args) => {
   });
 
   message.reply('Channel has been saved to the database ✅, I will now attempt to join the channel...')
+
   //Join channel
   message.guild.channels.get(channelID).join().then(connection => {
-    client.logger.log(`Connected to voicechannel: ${message.guild.channels.get(channelID).name}`);
+    client.logger.log(`Connected to voicechannel: ${message.guild.channels.get(channelID).name} in ${message.guild.name}`);
   }).catch(e => {
     client.logger.log(e, "error");
   });

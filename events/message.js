@@ -25,5 +25,7 @@
     const command = args.shift().toLowerCase();
     const cmd = client.commands.get(command);
     if(!cmd) return(message.reply(`I don't recognize this as a valid command.`));
+
+    client.logger.log(`${message.author.username} ran command "${command}" with args: ${args}`, "cmd");
     cmd.run(client, message, args);
 };
