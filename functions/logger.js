@@ -27,15 +27,11 @@ class Logger {
         {
             return console.log(`${timestamp} ${chalk.cyan(type.toUpperCase())} ${log} `);
         }
-        case "dm":
-        {
-            return console.log(`${timestamp} ${chalk.blue(type.toUpperCase())} ${log} `);
-        }
         case "event":
         {
             return console.log(`${timestamp} ${chalk.yellow(type.toUpperCase())} ${log} `);
         }
-        case "greet":
+        case "sound":
         {
             return console.log(`${timestamp} ${chalk.blue(type.toUpperCase())} ${log} `);
         }

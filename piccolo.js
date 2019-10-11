@@ -6,7 +6,6 @@ const client = new Discord.Client();
 client.mysql = require('mysql');
 client.config = require("./config.json");
 client.logger = require("./functions/logger");
-client.ytdl = require('ytdl-core');
 client.fs = require("fs");
 
 client.con = client.mysql.createConnection({
@@ -52,4 +51,5 @@ client.login(client.config.token);
 client.on("disconnect", () => client.logger.log("Bot is disconnecting...", "warning"))
     .on("reconnect", () => client.logger.log("Bot reconnecting...", "warning"))
     .on("error", e => client.logger.error(e))
-    .on("warn", info => client.logger.warn(info));
+    .on("warn", info => client.logger.warn(info))
+    .on("unhandledRejection", console.error);
