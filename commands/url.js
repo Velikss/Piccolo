@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const date = require("date-and-time");
+const fs = require("fs");
 
 exports.run = (client, message, args) => {
   client.logger.log(`Saving url for ${message.author.tag}...`, "cmd");
@@ -19,7 +20,7 @@ exports.run = (client, message, args) => {
         fs.unlinkSync(result[0].path)
 
       //Update database
-      var sql = `UPDATE greetings SET path = ${mysql.escape(url)}, date = '${date.format(new Date(), "ddd MM DD | hh:mm:ss A")}' WHERE userID = ${mysql.escape(userID)}`;
+      var sql = `UPDATE greetings SET path = ${mysql.escape(url)}, type = 'url', date = '${date.format(new Date(), "ddd MM DD | hh:mm:ss A")}' WHERE userID = ${mysql.escape(userID)}`;
       con.query(sql, function (err, result) {
         if (err) throw err;
         client.logger.log(`${result.affectedRows} records(s) updated for user ${message.author.tag}`, "succes");

@@ -6,7 +6,6 @@ const client = new Discord.Client();
 client.mysql = require('mysql');
 client.config = require("./config.json");
 client.logger = require("./functions/logger");
-client.ytdl = require('ytdl-core');
 client.fs = require("fs");
 
 client.con = client.mysql.createConnection({
